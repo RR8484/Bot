@@ -1,9 +1,6 @@
-// commands/fun/meme.js
-
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { EmbedBuilder } = require('discord.js');
 const axios = require('axios');
-const util = require('util')
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -21,12 +18,15 @@ module.exports = {
 			}
 
 			const memeArray = response.data.data.memes;
-			const meme = memeArray[Math.floor(Math.random() * memeArray.length)];
+			const memeData = memeArray[Math.floor(Math.random() * memeArray.length)];
+
+			// Store the template ID when you fetch the meme
+			interaction.client.currentMemeTemplateId = memeData.id;
 
 			const embed = new EmbedBuilder()
-				.setTitle(meme.name)
-				.setImage(meme.url)
-				.setFooter({ text: `ID: ${meme.id} | Width: ${meme.width} | Height: ${meme.height}` })
+				.setTitle(memeData.name)
+				.setImage(memeData.url)
+				.setFooter({  text: `ID: ${memeData.id}, Width: ${memeData.width}, Height: ${memeData.height}` })
 				.setColor('#1E90FF');
 
 			await interaction.editReply({ embeds: [embed] });
