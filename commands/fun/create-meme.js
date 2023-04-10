@@ -6,11 +6,11 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('create-meme')
     .setDescription('Create a meme using the last meme template')
-    .addStringOption(option => option.setName('top_text').setDescription('Top text of the meme').setRequired(true))
-    .addStringOption(option => option.setName('bottom_text').setDescription('Bottom text of the meme').setRequired(true)),
+    .addStringOption(option => option.setName('top_text').setDescription('Top text of the meme').setRequired(false))
+    .addStringOption(option => option.setName('bottom_text').setDescription('Bottom text of the meme').setRequired(false)),
   async execute(interaction) {
-    const topText = interaction.options.getString('top_text');
-    const bottomText = interaction.options.getString('bottom_text');
+    const topText = interaction.options.getString('top_text') || "";
+    const bottomText = interaction.options.getString('bottom_text') || "";
     
     const templateId = interaction.client.currentMemeTemplateId || '112126428';
 
@@ -19,7 +19,9 @@ module.exports = {
     if (response.data.success) {
       await interaction.reply({ content: response.data.data.url });
     } else {
+      console.error(error)
       await interaction.reply({ content: 'Failed to create meme. Please try again.', ephemeral: true });
     }
   },
 };
+
